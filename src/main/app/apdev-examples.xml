@@ -13,7 +13,8 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
         <flow-ref name="subflow1" doc:name="subflow1"/>
         <flow-ref name="subflow2" doc:name="subflow2"/>
         <flow-ref name="flow2" doc:name="flow2"/>
-        <vm:outbound-endpoint exchange-pattern="request-response" path="vmflow" doc:name="VM"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/flow3" method="GET" doc:name="HTTP"/>
+        <!--vm:outbound-endpoint exchange-pattern="request-response" path="vmflow" doc:name="VM"/-->
         <logger message="#['\nName: ' + message.outboundProperties.qpname + '\nType: ' + flowVars.qptype + '\nColor: ' + sessionVars.color]" level="INFO" doc:name="Logger"/>
     </flow>
     <sub-flow name="subflow1">
@@ -27,6 +28,11 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
     <flow name="flow2">
         <vm:inbound-endpoint exchange-pattern="request-response" path="vmflow" doc:name="VM"/>
         <set-payload value="Good Bye" doc:name="Set Payload"/>
+        <logger level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="flow3">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/flow3" allowedMethods="GET" doc:name="HTTP"/>
+        <set-payload value="Hello Good Bye" doc:name="Set Payload"/>
         <logger level="INFO" doc:name="Logger"/>
     </flow>
 </mule>
